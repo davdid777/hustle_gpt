@@ -71,7 +71,7 @@ class _ProcessingScreenState extends State<ProcessingScreen>
           Positioned.fill(
             child: ImageFiltered(
               imageFilter: ColorFilter.mode(
-                Theme.of(context).colorScheme.background.withOpacity(0.7),
+                Theme.of(context).colorScheme.surface.withOpacity(0.7),
                 BlendMode.srcOver,
               ),
               child: Image.file(File(widget.imagePath), fit: BoxFit.cover),
@@ -116,7 +116,7 @@ class _ProcessingScreenState extends State<ProcessingScreen>
                             width: 100,
                             height: 100,
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.background,
+                              color: Theme.of(context).colorScheme.surface,
                               shape: BoxShape.circle,
                             ),
                             child: Center(
@@ -157,7 +157,7 @@ class _ProcessingScreenState extends State<ProcessingScreen>
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: Theme.of(
                         context,
-                      ).colorScheme.onBackground.withOpacity(0.7),
+                      ).colorScheme.onSurface.withOpacity(0.7),
                     ),
                     textAlign: TextAlign.center,
                   ),

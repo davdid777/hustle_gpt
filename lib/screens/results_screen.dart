@@ -35,8 +35,8 @@ class ResultsScreen extends StatelessWidget {
                           Colors.transparent,
                           Theme.of(
                             context,
-                          ).colorScheme.background.withOpacity(0.8),
-                          Theme.of(context).colorScheme.background,
+                          ).colorScheme.surface.withOpacity(0.8),
+                          Theme.of(context).colorScheme.surface,
                         ],
                         stops: const [0.0, 0.7, 1.0],
                       ),
@@ -82,7 +82,7 @@ class ResultsScreen extends StatelessWidget {
                         child: _IdeaCard(idea: entry.value),
                       ),
                     );
-                  }).toList(),
+                  }),
                   const SizedBox(height: 32),
                   Center(
                     child: TextButton.icon(
