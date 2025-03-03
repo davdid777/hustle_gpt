@@ -1,36 +1,118 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:camera/camera.dart';
+import 'package:provider/provider.dart';
+import 'package:hustle_gpt/screens/home_screen.dart';
+import 'package:hustle_gpt/providers/analysis_provider.dart';
 
-void main() {
-  runApp(const MyApp());
+List<CameraDescription> cameras = [];
+
+Future<void> main() async {
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+
+    // Initialize cameras
+    cameras = await availableCameras();
+
+    runApp(
+      MultiProvider(
+        providers: [ChangeNotifierProvider(create: (_) => AnalysisProvider())],
+        child: MyApp(cameras: cameras),
+      ),
+    );
+  } catch (e) {
+    debugPrint('Error initializing cameras: $e');
+    // Run the app without camera initialization
+    runApp(
+      MultiProvider(
+        providers: [ChangeNotifierProvider(create: (_) => AnalysisProvider())],
+        child: const MyApp(cameras: []),
+      ),
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final List<CameraDescription> cameras;
 
-  // This widget is the root of your application.
+  const MyApp({super.key, required this.cameras});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'HustleGPT',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+        brightness: Brightness.dark,
+        colorScheme: ColorScheme.dark(
+          background: const Color(0xFF121212),
+          surface: const Color(0xFF1E1E1E),
+          primary: const Color(0xFF8B5CF6), // Purple
+          secondary: const Color(0xFF3B82F6), // Blue
+          tertiary: const Color(0xFF06B6D4), // Cyan for accents
+          onBackground: Colors.white,
+          onSurface: Colors.white,
+        ),
+        textTheme: GoogleFonts.spaceGroteskTextTheme(
+          ThemeData.dark().textTheme,
+        ).copyWith(
+          displayLarge: GoogleFonts.spaceGrotesk(
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+            letterSpacing: -0.5,
+            color: Colors.white,
+          ),
+          displayMedium: GoogleFonts.spaceGrotesk(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            letterSpacing: -0.5,
+            color: Colors.white,
+          ),
+          titleLarge: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            letterSpacing: -0.5,
+            color: Colors.white,
+          ),
+          bodyLarge: TextStyle(
+            fontSize: 16,
+            letterSpacing: -0.2,
+            color: Colors.white.withOpacity(0.87),
+          ),
+        ),
+        scaffoldBackgroundColor: const Color(0xFF121212),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          iconTheme: IconThemeData(color: Colors.white),
+        ),
+        // Custom button styles
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: const Color(0xFF8B5CF6),
+            elevation: 0,
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            foregroundColor: const Color(0xFF8B5CF6),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
+        // Remove splash effects
+        splashFactory: NoSplash.splashFactory,
+        highlightColor: Colors.transparent,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: HomeScreen(cameras: cameras),
     );
   }
 }
